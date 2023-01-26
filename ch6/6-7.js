@@ -1,6 +1,6 @@
-let a = height * width;
+let 영역 = height * width;
 
-const cpyNm = '애플';
+const apple = "애플";
 
-let tpHd = '제목없음';
-let result = `<h1>${tpHd}</h1>`;
+let title = "제목없음";
+let headerComponent = `<h1>${title}</h1>`;
