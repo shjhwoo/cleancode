@@ -6,3 +6,13 @@ export function price(order) {
     Math.min(order.quantity * order.itemPrice * 0.1, 100)
   );
 }
+
+function refactoredCalculatePrice(order) {
+  const quantity = order.quantity;
+  const itemPrice = order.itemPrice;
+  const basicPrice = quantity * itemPrice;
+  const quantityDiscount = Math.max(0, quantity - 500) * itemPrice * 0.05;
+  const deliveryPrice = Math.min(quantity * itemPrice * 0.1, 100);
+
+  return basicPrice - quantityDiscount + deliveryPrice;
+}
