@@ -1,16 +1,29 @@
 export function priceOrder(product, quantity, shippingMethod) {
-  const basePrice = product.basePrice * quantity;
-  const discount =
+  const basePrice = calcBasePrice(basePrice, quantity);
+  const discountedPrice = calcDiscountedPrice(product, quantity);
+  const shippingCost = shippingCost(basePrice, quantity, shippingMethod);
+  const price = basePrice - discountedPrice + shippingCost;
+  return price;
+}
+
+function calcBasePrice(basePrice, quantity) {
+  return basePrice * quantity;
+}
+
+function calcDiscountedPrice(product, quantity) {
+  return (
     Math.max(quantity - product.discountThreshold, 0) *
     product.basePrice *
-    product.discountRate;
+    product.discountRate
+  );
+}
+
+function shippingCost(basePrice, quantity, shippingMethod) {
   const shippingPerCase =
     basePrice > shippingMethod.discountThreshold
       ? shippingMethod.discountedFee
       : shippingMethod.feePerCase;
-  const shippingCost = quantity * shippingPerCase;
-  const price = basePrice - discount + shippingCost;
-  return price;
+  return quantity * shippingPerCase;
 }
 
 // 사용 예:
