@@ -28,3 +28,84 @@ const shippingMethod = {
 
 const price = priceOrder(product, 5, shippingMethod);
 console.log(price);
+
+//refact ver.
+
+class Product {
+  #basePrice;
+  #discountRate;
+  #discountThreshold;
+  constructor(product) {
+    this.#basePrice = product.basePrice;
+    this.#discountRate = product.discountRate;
+    this.#discountThreshold = product.discountThreshold;
+  }
+
+  get basePrice() {
+    return this.#basePrice;
+  }
+
+  get discountRate() {
+    return this.#discountRate;
+  }
+
+  get discountThreshold() {
+    return this.#discountThreshold;
+  }
+
+  calcBasePrice(quantity) {
+    return this.basePrice * quantity;
+  }
+
+  calcDiscount(quantity) {
+    return (
+      Math.max(quantity - this.discountThreshold, 0) *
+      this.basePrice *
+      this.discountRate
+    );
+  }
+}
+
+class ShippingMethod {
+  #discountThreshold;
+  #feePerCase;
+  #discountedFee;
+  constructor(shippingMethod) {
+    this.#discountThreshold = shippingMethod.basePrice;
+    this.#feePerCase = shippingMethod.discountRate;
+    this.#discountedFee = shippingMethod.discountThreshold;
+  }
+
+  get discountThreshold() {
+    return this.#discountThreshold;
+  }
+
+  get feePerCase() {
+    return this.#feePerCase;
+  }
+
+  get discountedFee() {
+    return this.#discountedFee;
+  }
+
+  calcShippingPerCase(basePrice) {
+    return basePrice > this.discountThreshold
+      ? this.discountedFee
+      : this.feePerCase;
+  }
+
+  calcShippingCost(basePrice, quantity) {
+    return this.calcShippingPerCase(basePrice) * quantity;
+  }
+}
+
+function calculatePriceOrder(product, quantity, shippingMethod) {
+  const basePrice = new Product(product).basePrice;
+  const discount = new Product(product).discount;
+  const shippingCost = new ShippingMethod(shippingMethod).calcShippingCost(
+    basePrice,
+    quantity
+  );
+
+  return basePrice - discount + shippingCost;
+}
