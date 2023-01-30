@@ -100,8 +100,8 @@ class ShippingMethod {
 }
 
 function calculatePriceOrder(product, quantity, shippingMethod) {
-  const basePrice = new Product(product).basePrice;
-  const discount = new Product(product).discount;
+  const basePrice = new Product(product).calcBasePrice(quantity);
+  const discount = new Product(product).calcDiscount(quantity);
   const shippingCost = new ShippingMethod(shippingMethod).calcShippingCost(
     basePrice,
     quantity
