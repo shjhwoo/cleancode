@@ -1,11 +1,7 @@
 class Person {
   #name;
-  #officeAreaCode;
-  #officeNumber;
-  constructor(name, areaCode, number) {
+  constructor(name) {
     this.#name = name;
-    this.#officeAreaCode = areaCode;
-    this.#officeNumber = number;
   }
 
   get name() {
@@ -14,6 +10,15 @@ class Person {
 
   set name(arg) {
     this.#name = arg;
+  }
+}
+
+class Office {
+  #officeAreaCode;
+  #officeNumber;
+  constructor(areaCode, number) {
+    this.#officeAreaCode = areaCode;
+    this.#officeNumber = number;
   }
 
   get telephoneNumber() {
@@ -37,8 +42,9 @@ class Person {
   }
 }
 
-const person = new Person('엘리', '010', '12345678');
+const person = new Person("엘리");
+const office = new Office("82", "01098080785");
 console.log(person.name);
-console.log(person.officeAreaCode);
-console.log(person.officeNumber);
-console.log(person.telephoneNumber);
+console.log(office.officeAreaCode);
+console.log(office.officeNumber);
+console.log(office.telephoneNumber);
