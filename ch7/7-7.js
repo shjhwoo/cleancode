@@ -1,35 +1,41 @@
 class Person {
   #name;
-  #manager;
-  #chargeCode;
-  constructor(name, manager, chargeCode) {
+  #department;
+  constructor(name, department) {
     this.#name = name;
-    this.#manager = manager;
-    this.#chargeCode = chargeCode;
+    this.#department = department;
   }
 
   get name() {
     return this.#name;
   }
 
-  get manager() {
-    return this.#manager;
+  get department() {
+    return this.#department;
   }
 
-  set manager(arg) {
-    this.#manager = arg;
+  set department(arg) {
+    this.#department = arg;
   }
 
   get chargeCode() {
-    return this.#chargeCode;
+    return this.#department.chargeCode;
   }
 
   set chargeCode(arg) {
     this.#chargeCode = arg;
   }
+
+  get manager() {
+    return this.#department.manager;
+  }
+
+  set manager(arg) {
+    this.#manager = arg;
+  }
 }
 
-const person = new Person("Tom", "aManager", "999");
+const person = new Person("Tom", { manager: "aManager", chargeCode: "999" });
 console.log(person.name);
 console.log(person.manager);
 console.log(person.chargeCode);
