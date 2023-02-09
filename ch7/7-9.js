@@ -28,3 +28,9 @@ console.log(foundPerson2(["John"]));
 console.log(foundPerson2(["Don", "John"]));
 console.log(foundPerson2(["Kent", "Don", "John"]));
 console.log(foundPerson2(["Lisa", "Don", "Tom"]));
+
+//더 간단히.
+function foundPerson3(people) {
+  const candidates = ["Don", "John", "Kent"];
+  return people.find((p) => candidates.includes(p)) || "";
+}
