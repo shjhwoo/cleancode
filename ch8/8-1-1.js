@@ -51,3 +51,64 @@ const tokyo = {
 
 const summary = trackSummary([newYork, tokyo]);
 console.log(summary);
+
+class Track {
+  #points;
+  #time;
+  #EARTH_RADIUS;
+  constructor(points) {
+    this.#points = [...points];
+    this.#time = 10000;
+    this.#EARTH_RADIUS = 3959;
+  }
+
+  get Time() {
+    return this.#time;
+  }
+
+  getSummary() {
+    return {
+      time: this.#time,
+      distance: this.calculateDistance(),
+      pace: this.getPace(),
+    };
+  }
+
+  calculateDistance() {
+    //응집도가 높은가??.. 정말??
+    let result = 0;
+    for (let i = 1; i < this.#points.length; i++) {
+      result += this.getDistance(this.#points[i - 1], this.#points[i]);
+    }
+    return result;
+  }
+
+  getPace() {
+    return this.#time / 60 / totalDistance;
+  }
+
+  getDistance(p1, p2) {
+    //해당 배열 내 있는지 유효성 검사할것
+    const dLat = this.getLat(p1, p2);
+    const dLon = this.getLon(p1, p2);
+    const a =
+      Math.pow(Math.sin(dLat / 2), 2) +
+      Math.cos(this.getRadians(p1.lat)) *
+        Math.cos(this.getRadians(p2.lat)) *
+        Math.pow(Math.sin(dLon / 2), 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return this.#EARTH_RADIUS * c;
+  }
+
+  getLat(p1, p2) {
+    return this.getRadians(p1.lat) - this.getRadians(p2.lat);
+  }
+
+  getLon(p1, p2) {
+    return this.getRadians(p1.lon) - this.getRadians(p2.lon);
+  }
+
+  getRadians(degrees) {
+    return (degrees * Math.PI) / 180;
+  }
+}
