@@ -26,12 +26,14 @@ const result = acquireData(input);
 console.log(result);
 
 function acquireData(input) {
-  const lines = input.split("\n").slice(1);
-  const india = lines.filter((line) => isIndia(line)).split(",");
+  const result = [];
+  input
+    .split("\n")
+    .slice(1)
+    .filter((line) => line.trim() !== "")
+    .map((line) => line.split(","))
+    .filter((line) => line[1].trim() === "India")
+    .foreach((line) => result.push({ city: line[0], phone: line[2] }));
 
-  return [{ city: india[0].trim(), phone: india[2].trim() }];
-}
-
-function isIndia(line) {
-  return line.split(",")[1].trim() === "India";
+  return result;
 }
