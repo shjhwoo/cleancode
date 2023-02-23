@@ -2,12 +2,11 @@
 class Order {
   // 다른 코드 있다고 가정
   get discountedTotal() {
-    return this._discountedTotal;
+    return this._basePrice - this._discount;
   }
+
   set discount(value) {
-    const old = this._discount;
     this._discount = value;
-    this._discountedTotal += old - value;
   }
 }
 
@@ -15,10 +14,10 @@ class Order {
 class ProductionPlan {
   // 다른 코드 있다고 가정
   get production() {
-    return this._production;
+    return this._adjustments.reduce((sum, b) => sum + b.amount);
   }
+
   applyAdjustment(adjustment) {
     this._adjustments.push(adjustment);
-    this._production += adjustment.amount;
   }
 }
