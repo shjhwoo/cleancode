@@ -1,3 +1,5 @@
+const pnum = 9.81;
+
 function potentialEnergy(mass, height) {
-  return mass * 9.81 * height;
+  return pnum * mass * height;
 }
