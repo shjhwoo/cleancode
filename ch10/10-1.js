@@ -5,3 +5,34 @@ function calculateCharge(date, quantity, plan) {
   else charge = quantity * plan.regularRate + plan.regularServiceCharge;
   return charge;
 }
+
+//개선 후
+function calculateCharge2(date, quantity, plan) {
+  let charge = 0;
+  if (date.isBetween(plan.summerStart, plan.summerEnd)) {
+    charge = quantity * plan.regularRate + plan.regularServiceCharge;
+  } else {
+    charge = quantity * plan.summerRate;
+  }
+  return charge;
+}
+
+//또는
+function calculateCharge3(date, quantity, plan) {
+  let charge = 0;
+  const isSummer = date.isBetween(plan.summerStart, plan.summerEnd);
+  if (isSummer) {
+    charge = regularCharge() + plan.regularServiceCharge;
+  } else {
+    charge = summerCharge();
+  }
+  return charge;
+}
+
+function summerCharge() {
+  return quantity * plan.summerRate;
+}
+
+function regularCharge() {
+  return quantity * plan.regularRate;
+}
