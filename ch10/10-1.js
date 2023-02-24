@@ -19,14 +19,8 @@ function calculateCharge2(date, quantity, plan) {
 
 //또는
 function calculateCharge3(date, quantity, plan) {
-  let charge = 0;
   const isSummer = date.isBetween(plan.summerStart, plan.summerEnd);
-  if (isSummer) {
-    charge = regularCharge() + plan.regularServiceCharge;
-  } else {
-    charge = summerCharge();
-  }
-  return charge;
+  return isSummer ? summerCharge() : regularCharge();
 }
 
 function summerCharge() {
@@ -34,5 +28,5 @@ function summerCharge() {
 }
 
 function regularCharge() {
-  return quantity * plan.regularRate;
+  return quantity * plan.regularRate + plan.regularServiceCharge;
 }
