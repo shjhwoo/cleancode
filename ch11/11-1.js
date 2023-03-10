@@ -29,6 +29,11 @@ export function alertForMiscreant(people, alarm) {
   return "";
 }
 
+//++엘리 개선 후.
+function alertForMiscreant(people, alarm) {
+  setOffAlarms(alarm, getMiscreantName(people));
+}
+
 function alertForMiscreant(people, alarm) {
   people
     .filter((name) => isMiscreant(name))
