@@ -1,6 +1,7 @@
 export function temperatureAlerts(room, plan) {
   const alerts = [];
-  if (!plan.withinRange(room.daysTempRange)) {
+  const inRange = plan.withinRange(room.daysTempRange);
+  if (!inRange) {
     alerts.push("room temperature went outside range");
   }
 
@@ -13,9 +14,13 @@ export class HeatingPlan {
   }
 
   withinRange(daysTempRange) {
-    return (
-      daysTempRange.low >= this._temperatureRange.low &&
-      daysTempRange.high <= this._temperatureRange.high
-    );
+    const lowBorder = this._temperatureRange.low;
+    const highBorder = this._temperatureRange.high;
+
+    return daysTempRange.low >= lowBorder && daysTempRange.high <= highBorder;
   }
 }
+
+//어느 정도 규모의 인자를 전달할 건가??
+
+//정확한 규칙은 없다.
