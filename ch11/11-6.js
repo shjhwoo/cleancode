@@ -5,3 +5,10 @@ function targetTemperature(aPlan) {
   currentTemperature = thermostat.currentTemperature;
   // ...
 }
+
+//바꾸기...
+targetTemperature(plan, thermostat.currentTemperature);
+
+function targetTemperature2(plan, currentTemperature) {
+  //...
+}
