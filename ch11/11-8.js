@@ -12,6 +12,11 @@ export class Employee {
   }
 
   static get legalTypeCodes() {
-    return { E: 'Engineer', M: 'Manager', S: 'Salesman' };
+    return { E: "Engineer", M: "Manager", S: "Salesman" };
   }
+}
+
+//생성자를 캡슐화한다.
+function createEmployee(name) {
+  return new Employee(name, "E");
 }
