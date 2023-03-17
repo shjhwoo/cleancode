@@ -14,9 +14,9 @@ export class Employee {
   static get legalTypeCodes() {
     return { E: "Engineer", M: "Manager", S: "Salesman" };
   }
-}
 
-//생성자를 캡슐화한다.
-function createEmployee(name) {
-  return new Employee(name, "E");
+  //이렇게 한다!! 외부에선 이름만 주면 된다!!
+  static createEngineer(name) {
+    return new Employee(name, "E");
+  }
 }
