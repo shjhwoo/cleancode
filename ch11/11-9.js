@@ -23,6 +23,7 @@ export class ScoringGuide {
   }
 }
 
+//================================================================
 export function score(candidate, medicalExam, scoringGuide) {
   return new ScoreCalc(candidate, medicalExam, scoringGuide).getScore();
 }
