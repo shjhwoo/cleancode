@@ -7,9 +7,9 @@ export function score(candidate, medicalExam, scoringGuide) {
     healthLevel += 10;
     highMedicalRiskFlag = true;
   }
-  let certificationGrade = 'regular';
+  let certificationGrade = "regular";
   if (scoringGuide.stateWithLowCertification(candidate.originState)) {
-    certificationGrade = 'low';
+    certificationGrade = "low";
     result -= 5;
   }
   // lots more code like this
@@ -20,5 +20,42 @@ export function score(candidate, medicalExam, scoringGuide) {
 export class ScoringGuide {
   stateWithLowCertification(state) {
     return state < 5;
+  }
+}
+
+export class ScoreCalc {
+  constructor(candidate, medicalExam, scoringGuide) {
+    this.result = 0;
+    this.healthLevel = 0;
+    this.highMedicalRiskFlag = false;
+    this.candidate = candidate;
+    this.medicalExam = medicalExam;
+    this.scoringGuide = scoringGuide;
+    this.certificationGrade = "regular";
+  }
+
+  getScore() {
+    this.addSmokerCondition();
+
+    this.addLowCertCondition();
+
+    this.result -= Math.max(this.healthLevel - 5, 0);
+    return this.result;
+  }
+
+  addSmokerCondition() {
+    if (this.medicalExam.isSmoker) {
+      this.healthLevel += 10;
+      this.highMedicalRiskFlag = true;
+    }
+  }
+
+  addLowCertCondition() {
+    if (
+      this.scoringGuide.stateWithLowCertification(this.candidate.originState)
+    ) {
+      this.certificationGrade = "low";
+      this.result -= 5;
+    }
   }
 }
