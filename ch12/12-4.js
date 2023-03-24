@@ -1,6 +1,8 @@
-class Employee {
-  get quota() {}
-}
+class Employee {}
 
-class Engineer extends Employee {}
-class Salesperson extends Employee {}
+class Engineer extends Employee {
+  get quotaOfEng() {} //메서드가 달라 상속 불가.
+}
+class Salesperson extends Employee {
+  get quotaOfSales() {}
+}
