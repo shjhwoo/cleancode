@@ -1,9 +1,9 @@
-class Employee {}
-
-class Salesperson extends Employee {
-  #name;
+class Employee {
+  constructor(name) {
+    this._name = name;
+  }
 }
 
-class Engineer extends Employee {
-  #name;
-}
+class Salesperson extends Employee {}
+
+class Engineer extends Employee {}
