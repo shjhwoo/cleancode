@@ -29,24 +29,14 @@ class Employee {
 }
 
 class Engineer extends Employee {
-  constructor(name) {
-    super(name);
-    this.type = "engineer";
-  }
-
-  get name() {
-    return this.#name;
+  get type() {
+    return "engineer"; //각자만의 타입으로 정의.
   }
 }
 
 class Manager extends Employee {
-  constructor(name) {
-    super(name);
-    this.type = "manager";
-  }
-
-  get name() {
-    return this.#name;
+  get type() {
+    return "manager";
   }
 }
 
