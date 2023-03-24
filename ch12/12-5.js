@@ -1,6 +1,12 @@
-class Employee {
-  #quota;
-}
+class Employee {}
 
-class Engineer extends Employee {}
-class Salesperson extends Employee {}
+class Engineer extends Employee {
+  constructor(quota) {
+    this._quota = quota;
+  }
+}
+class Salesperson extends Employee {
+  constructor(quota) {
+    this._quota = quota;
+  }
+}
