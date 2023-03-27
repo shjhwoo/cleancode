@@ -1,11 +1,14 @@
 class Booking {
-  constructor(show, date) {
-    this._show = show;
-    this._date = date;
+  #BookingDelegate;
+  constructor(BookingDelegate, extras) {
+    this.#BookingDelegate = BookingDelegate;
+    this._extras = extras;
   }
 
   get hasTalkback() {
-    return this._show.hasOwnProperty('talkback') && !this.isPeakDay;
+    return this.#BookingDelegate
+      ? this.#BookingDelegate.hasTalkback()
+      : this._show.hasOwnProperty("talkback") && !this.isPeakDay;
   }
 
   get basePrice() {
@@ -26,7 +29,7 @@ class PremiumBooking extends Booking {
   }
 
   get hasTalkback() {
-    return this._show.hasOwnProperty('talkback');
+    return this._show.hasOwnProperty("talkback");
   }
 
   get basePrice() {
@@ -34,9 +37,18 @@ class PremiumBooking extends Booking {
   }
 
   get hasDinner() {
-    return this._extras.hasOwnProperty('dinner') && !this.isPeakDay;
+    return this._extras.hasOwnProperty("dinner") && !this.isPeakDay;
   }
 }
 
 const booking = new Booking(show, date);
 const premiumBooking = new PremiumBooking(show, date, extras);
+
+class BookingDelegate {
+  constructor(schedule, extras) {
+    this._schedule = schedule;
+    this._extras = extras;
+  }
+
+  get hasTalkback() {}
+}
