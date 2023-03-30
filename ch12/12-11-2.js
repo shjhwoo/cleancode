@@ -28,7 +28,6 @@ class Scroll {
 
   needsCleaning(targetDate) {
     const threshold = this.hasTag("revered") ? 700 : 1500;
-
     return this.daysSinceLastCleaning(targetDate) > threshold;
   }
 
