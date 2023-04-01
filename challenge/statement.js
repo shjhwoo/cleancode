@@ -1,29 +1,19 @@
-export function printStatement(invoice, plays) {
-  //이름 고침
-  let totalAmount = 0;
-  let volumeCredits = 0;
+export function printStatement(invoice) {
   let result = `청구 내역 (고객명: ${invoice.customer})\n`;
-  const format = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-  }).format;
 
-  for (let perf of invoice.performances) {
-    const play = plays[perf.playID];
-    const thisAmount = play.calcAmount(perf.audience);
-    totalAmount += thisAmount;
+  const stateDetail = invoice.performances.reduce((perf1, perf2) => {
+    return perf1.printPlayStatement() + perf2.printPlayStatement();
+  }, 0);
 
-    // 포인트를 적립한다.
-    volumeCredits += Math.max(perf.audience - 30, 0);
-    // 희극 관객 5명마다 추가 포인트를 제공한다.
-    if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
+  const totalAmount = invoice.performances.reduce((perf1, perf2) => {
+    return perf1.thisAmount + perf2.thisAmount;
+  }, 0);
 
-    // 청구 내역을 출력한다.
-    result += `  ${play.name}: ${format(thisAmount / 100)} (${
-      perf.audience
-    }석)\n`;
-  }
+  const volumeCredits = invoice.performances.reduce((perf1, perf2) => {
+    return perf1.calcCredits + perf2.calcCredits;
+  }, 0);
+
+  result += stateDetail;
   result += `총액: ${format(totalAmount / 100)}\n`;
   result += `적립 포인트: ${volumeCredits}점\n`;
   return result;
@@ -74,10 +64,6 @@ class AmountDelegate {
   constructor(baseAmount) {
     this.baseAmount = baseAmount;
   }
-
-  get baseAmount() {
-    return this.baseAmount;
-  }
 }
 
 class DefaultAmountDelegate extends AmountDelegate {
@@ -126,6 +112,40 @@ class ComedyAmountDelegate extends AmountDelegate {
   }
 }
 
+class Performance {
+  constructor(playID, audience, playsList) {
+    this.playID = playID;
+    this.audience = audience;
+    this.playsList = playsList;
+  }
+
+  get PlayDetail() {
+    return this.playsList[this.playID];
+  }
+
+  get thisAmount() {
+    return this.PlayDetail.calcAmount(this.audience);
+  }
+
+  printPlayStatement() {
+    return `  ${this.PlayDetail.name}: ${this.format(this.thisAmount / 100)} (${
+      this.audience
+    }석)\n`;
+  }
+
+  get calcCredits() {
+    return this.PlayDetail.calcCredits(this.audience);
+  }
+
+  format() {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 2,
+    }).format;
+  }
+}
+
 // 사용예:
 const playsJSON = {
   hamlet: new Plays("Hamlet", "tragedy"),
@@ -137,18 +157,9 @@ const invoicesJSON = [
   {
     customer: "BigCo",
     performances: [
-      {
-        playID: "hamlet",
-        audience: 55,
-      },
-      {
-        playID: "as-like",
-        audience: 35,
-      },
-      {
-        playID: "othello",
-        audience: 40,
-      },
+      new Performance("hamlet", 55, playsJSON),
+      new Performance("as-like", 35, playsJSON),
+      new Performance("othello", 40, playsJSON),
     ],
   },
 ];
