@@ -1,22 +1,43 @@
 export function printStatement(invoice) {
   let result = `청구 내역 (고객명: ${invoice.customer})\n`;
 
-  const stateDetail = invoice.performances.reduce((perf1, perf2) => {
+  result += printStatementList(invoice.performances);
+  result += printTotalAmountList(invoice.performances);
+  result += printVolumeCreditsList(invoice.performances);
+
+  return result;
+}
+
+function printStatementList(performancesList) {
+  const stateDetail = performancesList.reduce((perf1, perf2) => {
     return perf1.printPlayStatement() + perf2.printPlayStatement();
   }, 0);
 
-  const totalAmount = invoice.performances.reduce((perf1, perf2) => {
+  return stateDetail;
+}
+
+function printTotalAmountList(performancesList) {
+  const totalAmount = performancesList.reduce((perf1, perf2) => {
     return perf1.thisAmount + perf2.thisAmount;
   }, 0);
 
-  const volumeCredits = invoice.performances.reduce((perf1, perf2) => {
+  return `총액: ${format(totalAmount / 100)}\n`;
+}
+
+function format() {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+  }).format;
+}
+
+function printVolumeCreditsList(performancesList) {
+  const volumeCredits = performancesList.reduce((perf1, perf2) => {
     return perf1.calcCredits + perf2.calcCredits;
   }, 0);
 
-  result += stateDetail;
-  result += `총액: ${format(totalAmount / 100)}\n`;
-  result += `적립 포인트: ${volumeCredits}점\n`;
-  return result;
+  return `적립 포인트: ${volumeCredits}점\n`;
 }
 
 //1차시도: 클래스를 만들어서 정리해보자.
@@ -135,14 +156,6 @@ class Performance {
 
   get calcCredits() {
     return this.PlayDetail.calcCredits(this.audience);
-  }
-
-  format() {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 2,
-    }).format;
   }
 }
 
