@@ -1,46 +1,107 @@
 export function printStatement(invoice) {
-  let result = `청구 내역 (고객명: ${invoice.customer})\n`;
-
-  result += printStatementList(invoice.performances);
-  result += printTotalAmountList(invoice.performances);
-  result += printVolumeCreditsList(invoice.performances);
-
-  return result;
+  return new invoicePrinter(invoice, "string").print();
 }
 
-function printStatementList(performancesList) {
-  const stateDetail = performancesList.reduce((perf1, perf2) => {
-    return perf1.printPlayStatement() + perf2.printPlayStatement();
-  }, 0);
+class invoicePrinter {
+  constructor(invoice, printMode) {
+    this.customer = invoice.customer;
+    this.performancesList = invoice.performances;
+    this.printMode = printMode;
+  }
 
-  return stateDetail;
+  get Printer() {
+    switch (this.printMode) {
+      case "HTML":
+        return new HTMLformatPrinter();
+      case "string":
+        return new stringPrinter();
+    }
+  }
+
+  get totalAmount() {
+    return this.performancesList.reduce((perf1, perf2) => {
+      return perf1.thisAmount + perf2.thisAmount;
+    }, 0);
+  }
+
+  format() {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 2,
+    }).format;
+  }
+
+  get volumeCredits() {
+    return this.performancesList.reduce((perf1, perf2) => {
+      return perf1.credits + perf2.credits;
+    }, 0);
+  }
+
+  print() {
+    return this.Printer.print(
+      this.customer,
+      this.performancesList,
+      this.format(this.totalAmount / 100),
+      this.volumeCredits
+    );
+  }
 }
 
-function printTotalAmountList(performancesList) {
-  const totalAmount = performancesList.reduce((perf1, perf2) => {
-    return perf1.thisAmount + perf2.thisAmount;
-  }, 0);
-
-  return `총액: ${format(totalAmount / 100)}\n`;
+class superPrinter {
+  print(customer, performancesList, totalAmount, volumeCredits) {
+    return `${this.printStatementHead(customer)}${this.printStatementList(
+      performancesList
+    )}${this.printTotalAmountList(totalAmount)}${this.printVolumeCreditsList(
+      volumeCredits
+    )}`;
+  }
 }
 
-function format() {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-  }).format;
+class stringPrinter extends superPrinter {
+  printStatementHead(customer) {
+    return `청구 내역 (고객명: ${customer})\n`;
+  }
+
+  printStatementList(performancesList) {
+    const stateDetail = performancesList.reduce((perf1, perf2) => {
+      return perf1.printPlayStatement() + perf2.printPlayStatement();
+    }, 0);
+
+    return stateDetail;
+  }
+
+  printTotalAmountList(totalAmount) {
+    return `총액: ${totalAmount}\n`;
+  }
+
+  printVolumeCreditsList(volumeCredits) {
+    return `적립 포인트: ${volumeCredits}점\n`;
+  }
 }
 
-function printVolumeCreditsList(performancesList) {
-  const volumeCredits = performancesList.reduce((perf1, perf2) => {
-    return perf1.calcCredits + perf2.calcCredits;
-  }, 0);
+class HTMLformatPrinter extends superPrinter {
+  printStatementHead(customer) {
+    return `<h1>청구 내역 (고객명: ${customer})</h1>`;
+  }
 
-  return `적립 포인트: ${volumeCredits}점\n`;
+  printStatementList(performancesList) {
+    return `<table>
+    <tr><th>play</th><th>석</th><th>cost</th></tr>
+    ${performancesList.map((perf) => {
+      return `<tr><td>${perf.playID}</td><td>${perf.audience}</td><td>${perf.calcCredits}</td></tr>`;
+    })}
+    </table>`;
+  }
+
+  printTotalAmountList(totalAmount) {
+    return `<p>총액: <em>${totalAmount}</em></p>`;
+  }
+
+  printVolumeCreditsList(volumeCredits) {
+    return `<p>적립 포인트: <em>${volumeCredits}</em>점</p>`;
+  }
 }
-
-//1차시도: 클래스를 만들어서 정리해보자.
 
 class Plays {
   constructor(name, type) {
@@ -154,7 +215,7 @@ class Performance {
     }석)\n`;
   }
 
-  get calcCredits() {
+  get credits() {
     return this.PlayDetail.calcCredits(this.audience);
   }
 }
