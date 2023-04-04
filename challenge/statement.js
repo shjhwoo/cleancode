@@ -2,6 +2,7 @@ export function printStatement(invoice) {
   return new invoicePrinter(invoice, "string").print();
 }
 
+//인보이스는 인보이스 자체만의 속성과 메서드를 가져야 할거같다 프린터 메서드는 따로 분리해두고, 인보이스 내용을 프린터에 전해주는 걸로 바꿔보자
 class invoicePrinter {
   constructor(invoice, printMode) {
     this.customer = invoice.customer;
