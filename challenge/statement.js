@@ -1,28 +1,21 @@
-export function printStatement(invoice) {
-  return new invoicePrinter(invoice, "string").print();
+export function printStatement(invoice, printMode) {
+  const formattedInvoice = new Invoice(invoice);
+  const printer = new Printer(printMode, formattedInvoice);
+  return printer.print();
 }
 
 //인보이스는 인보이스 자체만의 속성과 메서드를 가져야 할거같다 프린터 메서드는 따로 분리해두고, 인보이스 내용을 프린터에 전해주는 걸로 바꿔보자
-class invoicePrinter {
-  constructor(invoice, printMode) {
+class Invoice {
+  constructor(invoice) {
     this.customer = invoice.customer;
     this.performancesList = invoice.performances;
-    this.printMode = printMode;
-  }
-
-  get Printer() {
-    switch (this.printMode) {
-      case "HTML":
-        return new HTMLformatPrinter();
-      case "string":
-        return new stringPrinter();
-    }
   }
 
   get totalAmount() {
-    return this.performancesList.reduce((perf1, perf2) => {
+    const totalAmount = this.performancesList.reduce((perf1, perf2) => {
       return perf1.thisAmount + perf2.thisAmount;
     }, 0);
+    return this.format(totalAmount / 100);
   }
 
   format() {
@@ -38,18 +31,37 @@ class invoicePrinter {
       return perf1.credits + perf2.credits;
     }, 0);
   }
+}
+
+class Printer {
+  constructor(printMode, invoice) {
+    this.printMode = printMode;
+    this.customer = invoice.customer;
+    this.performancesList = invoice.performancesList;
+    this.totalAmount = invoice.totalAmount;
+    this.volumeCredits = invoice.volumeCredits;
+  }
+
+  setPrinter() {
+    switch (this.printMode) {
+      case "HTML":
+        return new HTMLformatPrinter();
+      case "string":
+        return new StringPrinter();
+    }
+  }
 
   print() {
-    return this.Printer.print(
+    return this.setPrinter().print(
       this.customer,
       this.performancesList,
-      this.format(this.totalAmount / 100),
+      this.totalAmount,
       this.volumeCredits
     );
   }
 }
 
-class superPrinter {
+class SuperPrinter {
   print(customer, performancesList, totalAmount, volumeCredits) {
     return `${this.printStatementHead(customer)}${this.printStatementList(
       performancesList
@@ -59,7 +71,11 @@ class superPrinter {
   }
 }
 
-class stringPrinter extends superPrinter {
+class StringPrinter extends SuperPrinter {
+  constructor() {
+    super();
+  }
+
   printStatementHead(customer) {
     return `청구 내역 (고객명: ${customer})\n`;
   }
@@ -81,7 +97,11 @@ class stringPrinter extends superPrinter {
   }
 }
 
-class HTMLformatPrinter extends superPrinter {
+class HTMLformatPrinter extends SuperPrinter {
+  constructor() {
+    super();
+  }
+
   printStatementHead(customer) {
     return `<h1>청구 내역 (고객명: ${customer})</h1>`;
   }
