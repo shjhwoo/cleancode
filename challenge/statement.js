@@ -1,3 +1,10 @@
+//변수 함수 기본적인 베이스를 정리하고: 눈에 보이는 로우레벨부터 정리하고
+//다되면 하이레벨 리팩토링 들어가자
+/*
+format 함수같은 유틸리티 함수는 외부로 추출해준다
+switch 문의 경우, 다형성 생각, 단 일단 함수로 만들고 나서 정리할 생각해보자.
+그 결과에서 인수를 줄일 방법을 찾아보자.
+*/
 export function printStatement(invoice, printMode) {
   const formattedInvoice = new Invoice(invoice);
   const printer = new Printer(printMode, formattedInvoice);
