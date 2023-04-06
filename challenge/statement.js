@@ -8,7 +8,7 @@ switch 문의 경우, 다형성 생각, 단 일단 함수로 만들고 나서 �
 
 /*
 데이터와 로직을 분리하기
-클래스로 만들어 보자
+클래스로 만들어 보자 
 */
 export function printStatement(invoice, printMode) {
   const formattedInvoice = new Invoice(invoice);
