@@ -5,6 +5,11 @@ format 함수같은 유틸리티 함수는 외부로 추출해준다
 switch 문의 경우, 다형성 생각, 단 일단 함수로 만들고 나서 정리할 생각해보자.
 그 결과에서 인수를 줄일 방법을 찾아보자.
 */
+
+/*
+데이터와 로직을 분리하기
+클래스로 만들어 보자
+*/
 export function printStatement(invoice, printMode) {
   const formattedInvoice = new Invoice(invoice);
   const printer = new Printer(printMode, formattedInvoice);
@@ -15,7 +20,7 @@ export function printStatement(invoice, printMode) {
 class Invoice {
   constructor(invoice) {
     this.customer = invoice.customer;
-    this.performancesList = invoice.performances;
+    this.performancesList = invoice.performances; //내가 필요한 play 형태로 바꿔서 써도 됬었네..
   }
 
   get totalAmount() {
